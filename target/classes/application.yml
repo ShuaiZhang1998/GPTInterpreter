@@ -1,0 +1,8 @@
+spring:
+  # rabbit mq
+  rabbitmq:
+    host: 116.204.76.47
+    port: 5672
+    username: zs
+    password: Cx.123456
+    virtual-host: /

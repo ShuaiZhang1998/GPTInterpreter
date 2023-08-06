@@ -1,8 +1,14 @@
 spring:
   # rabbit mq
   rabbitmq:
-    host: 0.0.0.0
+    host: 116.204.76.47
     port: 5672
-    username: Na
-    password: Na
+    username: zs
+    password: Cx.123456
     virtual-host: /
+  # mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://116.204.76.47:3306/mydatabase
+    username: root
+    password: Cx.123456

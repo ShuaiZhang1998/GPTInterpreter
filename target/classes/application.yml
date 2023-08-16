@@ -6,3 +6,19 @@ spring:
     username: zs
     password: Cx.123456
     virtual-host: /
+  # mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://116.204.76.47:3306/Chat_database
+    username: root
+    password: Cx.123456
+  profiles:
+    active: dev
+  # 支持 swagger3
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+
+

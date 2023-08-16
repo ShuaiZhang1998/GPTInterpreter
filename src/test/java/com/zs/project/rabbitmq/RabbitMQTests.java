@@ -1,15 +1,11 @@
-package com.zs.project;
+package com.zs.project.rabbitmq;
 
 import com.zs.project.config.RabbitMQConfig;
-import com.zs.project.service.TestService;
 import org.junit.jupiter.api.Test;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Service;
 
 @SpringBootTest
 
@@ -79,12 +75,8 @@ class RabbitMQTests {
         });
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME,"boot.error","Test");
     }
-    @Autowired
-    TestService testService;
 
-    @Test
-    void testAOP(){
-        testService.testServiece();
-    }
+
+
 
 }

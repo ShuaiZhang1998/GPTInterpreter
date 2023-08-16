@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyAspect {
 
-    @Before("execution(* com.zs.project.service.*.*(..))")
+    //@Before("execution(* com.zs.project.service.*.*(..))")
     public void beforeAdvice() {
         System.out.println("Before method execution: Logging...");
     }

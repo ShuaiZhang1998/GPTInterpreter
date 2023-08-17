@@ -1,6 +1,7 @@
 package com.zs.project.controller;
 
 
+import cn.hutool.core.util.IdUtil;
 import com.zs.project.exception.ErrorCode;
 import com.zs.project.exception.ServiceException;
 import com.zs.project.model.dto.chat.CreateChatRequest;
@@ -13,11 +14,16 @@ import com.zs.project.service.GptService;
 import com.zs.project.util.PatternUtils;
 import com.zs.project.util.ResultUtils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/chat")
@@ -75,8 +81,40 @@ public class ChatController {
         return ResultUtils.success(result);
     }
 
+    Map<String, String> msgMap = new ConcurrentHashMap<>();
 
 
+    /**
+     * 发送消息
+     *
+     * @param msg 消息
+     * @return 消息ID
+     */
+    @ResponseBody
+    @PostMapping("/sendMsg")
+    public String sendMsg(String msg) {
+        String msgId = IdUtil.simpleUUID();
+        msgMap.put(msgId, msg);
+        return msgId;
+    }
+
+    /**
+     * 对话
+     *
+     * @param msgId 消息ID
+     * @return SseEmitter
+     */
+    @GetMapping(value = "/conversation/{msgId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter conversation(@PathVariable("msgId") String msgId) {
+        SseEmitter sseEmitter = new SseEmitter();
+        String msg = msgMap.remove(msgId);
+
+        //调用流式会话服务
+        gptService.streamChatCompletion(msg, sseEmitter);
+
+        //及时返回SseEmitter对象
+        return sseEmitter;
+    }
 
 
 }

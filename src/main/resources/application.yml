@@ -18,6 +18,10 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+# 端口
+server:
+  port: 8080
+
 
 
 

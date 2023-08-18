@@ -13,6 +13,7 @@ import com.theokanning.openai.service.OpenAiService;
 import com.zs.project.exception.ErrorCode;
 import com.zs.project.exception.ServiceException;
 import com.zs.project.service.GptService;
+import com.zs.project.service.ResultCallback;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +33,7 @@ import java.net.Proxy;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 import static com.theokanning.openai.service.OpenAiService.*;
 
@@ -45,6 +47,8 @@ public class GptServiceImpl implements GptService {
     String token = "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";
     String proxyHost = "127.0.0.1";
     int proxyPort = 1111;
+
+
 
     @Override
     public String GptResponse(String query) {
@@ -115,7 +119,6 @@ public class GptServiceImpl implements GptService {
                 .logitBias(new HashMap<>())
                 .build();
 
-
         //流式对话（逐Token返回）
         StringBuilder receiveMsgBuilder = new StringBuilder();
         OpenAiService service = buildOpenAiService(token, proxyHost, proxyPort);
@@ -123,20 +126,16 @@ public class GptServiceImpl implements GptService {
                 //正常结束
                 .doOnComplete(() -> {
                     log.info("连接结束");
-
                     //发送连接关闭事件，让客户端主动断开连接避免重连
                     sendStopEvent(sseEmitter);
-
                     //完成请求处理
                     sseEmitter.complete();
                 })
                 //异常结束
                 .doOnError(throwable -> {
                     log.error("连接异常", throwable);
-
                     //发送连接关闭事件，让客户端主动断开连接避免重连
                     sendStopEvent(sseEmitter);
-
                     //完成请求处理携带异常
                     sseEmitter.completeWithError(throwable);
                 })
@@ -153,7 +152,6 @@ public class GptServiceImpl implements GptService {
                     receiveMsgBuilder.append(content);
                 });
         log.info("收到的完整消息：" + receiveMsgBuilder);
-
     }
 
     @Override
@@ -163,7 +161,6 @@ public class GptServiceImpl implements GptService {
         } catch (Exception e){
             throw new ServiceException(ErrorCode.SYSTEM_ERROR,"事件停止接口出错");
         }
-
     }
 
     @Override
@@ -185,5 +182,57 @@ public class GptServiceImpl implements GptService {
         return service;
     }
 
+
+    @Override
+    @Async
+    public void streamChatCompletion(String prompt, SseEmitter sseEmitter, ResultCallback resultCallback) {
+        log.info("发送消息：" + prompt);
+        final List<ChatMessage> messages = new ArrayList<>();
+        final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), prompt);
+        messages.add(systemMessage);
+        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
+                .builder()
+                .model("gpt-3.5-turbo")
+                .messages(messages)
+                .n(1)
+//                .maxTokens(500)
+                .logitBias(new HashMap<>())
+                .build();
+
+        //流式对话（逐Token返回）
+        StringBuilder receiveMsgBuilder = new StringBuilder();
+        OpenAiService service = buildOpenAiService(token, proxyHost, proxyPort);
+        service.streamChatCompletion(chatCompletionRequest)
+                //正常结束
+                .doOnComplete(() -> {
+                    log.info("连接结束");
+                    //发送连接关闭事件，让客户端主动断开连接避免重连
+                    sendStopEvent(sseEmitter);
+                    //完成请求处理
+                    sseEmitter.complete();
+                })
+                //异常结束
+                .doOnError(throwable -> {
+                    log.error("连接异常", throwable);
+                    //发送连接关闭事件，让客户端主动断开连接避免重连
+                    sendStopEvent(sseEmitter);
+                    //完成请求处理携带异常
+                    sseEmitter.completeWithError(throwable);
+                })
+                //收到消息后转发到浏览器
+                .blockingForEach(x -> {
+                    ChatCompletionChoice choice = x.getChoices().get(0);
+                    log.info("收到消息：" + choice);
+                    if (StringUtils.isEmpty(choice.getFinishReason())) {
+                        //未结束时才可以发送消息（结束后，先调用doOnComplete然后还会收到一条结束消息，因连接关闭导致发送消息失败:ResponseBodyEmitter has already completed）
+                        sseEmitter.send(choice.getMessage());
+                    }
+                    String content = choice.getMessage().getContent();
+                    content = content == null ? StringUtils.EMPTY : content;
+                    receiveMsgBuilder.append(content);
+                });
+        log.info("收到的完整消息：" + receiveMsgBuilder);
+        resultCallback.onCompletion(receiveMsgBuilder.toString());
+    }
 
 }

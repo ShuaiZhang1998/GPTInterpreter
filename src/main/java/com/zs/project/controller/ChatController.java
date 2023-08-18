@@ -9,13 +9,17 @@ import com.zs.project.model.dto.chat.UpdateChatRequest;
 import com.zs.project.model.entry.Chat;
 import com.zs.project.model.response.BaseResponse;
 import com.zs.project.service.ChatService;
+import com.zs.project.service.CodeInterpreter;
 import com.zs.project.service.ExService;
 import com.zs.project.service.GptService;
 import com.zs.project.util.PatternUtils;
 import com.zs.project.util.ResultUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -23,6 +27,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -44,10 +49,16 @@ public class ChatController {
     @Resource
     GptService gptService;
     /**
-     * 代码解释器服务
+     * 执行器服务
      */
     @Resource
     ExService exService;
+
+    /**
+     * 代码解释器服务
+     */
+    @Resource
+    CodeInterpreter codeInterpreter;
 
     /**
      * 获取已登陆用户的所有对话记录
@@ -115,6 +126,7 @@ public class ChatController {
      */
     Map<String, String> msgMap = new ConcurrentHashMap<>();
 
+
     /**
      * 发送消息
      * @param msg 消息
@@ -134,16 +146,29 @@ public class ChatController {
      * @param msgId 消息ID
      * @return SseEmitter
      */
+    private Map<String, String> resultsStore = new ConcurrentHashMap<>();
+
     @GetMapping(value = "/conversation/{msgId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter conversation(@PathVariable("msgId") String msgId) {
         SseEmitter sseEmitter = new SseEmitter();
         String msg = msgMap.remove(msgId);
-
-        //调用流式会话服务
-        gptService.streamChatCompletion(msg, sseEmitter);
-
-        //及时返回SseEmitter对象
+        msg ="你是一个代码解释器，你的职责就是负责解决用户的编程问题。当你接收到用户的问题，首先你会判断这个问题是否是一个可以用python编程解决的问题，如果不可以的话你会回复用户理由；如果问题可以用python" +
+                "编程解决的话，请你直接将代码回复给用户，代码请用markdown包裹并注明语言是python。"+"\n\n"+"用户问题是:"+msg;
+        gptService.streamChatCompletion(msg, sseEmitter, result -> {
+            resultsStore.put(msgId, result);
+        });
         return sseEmitter;
+    }
+
+    @GetMapping("/getResult/{msgId}")
+    public ResponseEntity<String> getResult(@PathVariable("msgId") String msgId) {
+        String result = resultsStore.get(msgId);
+        if (result != null) {
+            String s = exService.resultExPython(PatternUtils.extractPythonCode(result));
+            return ResponseEntity.ok(s);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Result not ready yet");
+        }
     }
 
 

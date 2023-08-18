@@ -25,13 +25,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @Author ShuaiZhang
+ * 聊天页面
+ */
+
 @RestController
 @RequestMapping("/chat")
 public class ChatController {
+    /**
+     * 一般地聊天服务
+     */
     @Resource
     ChatService chatService;
+    /**
+     * GPT外部服务
+     */
     @Resource
     GptService gptService;
+    /**
+     * 代码解释器服务
+     */
     @Resource
     ExService exService;
 
@@ -39,7 +53,7 @@ public class ChatController {
      * 获取已登陆用户的所有对话记录
      * 这里未来要改成分页查询
      * @param request
-     * @return
+     * @return 已登录用户的所有聊天记录
      */
     @GetMapping("/history")
     BaseResponse<List<Chat>> getLoginUserAllConversation(HttpServletRequest request){
@@ -49,6 +63,13 @@ public class ChatController {
         return ResultUtils.success(allChatByUserID);
     }
 
+    /**
+     * 在数据库里创建一条新的对话
+     * @param createChatRequest
+     * @param request
+     * @return 新对话地ID
+     */
+
     @PostMapping("/create")
     BaseResponse<Long> createNewConversation(@RequestBody CreateChatRequest createChatRequest,HttpServletRequest request){
         if(createChatRequest==null)
@@ -57,6 +78,13 @@ public class ChatController {
         long newConversion = chatService.createNewConversion(conversationName, request);
         return ResultUtils.success(newConversion);
     }
+
+    /**
+     * 组合用户的结果并同步到数据库
+     * @param updateChatRequest
+     * @param request
+     * @return 代码解释器地运行结果
+     */
 
     @PostMapping("/update")
     BaseResponse<String> updateConversationHistory(@RequestBody UpdateChatRequest updateChatRequest,HttpServletRequest request){
@@ -81,12 +109,14 @@ public class ChatController {
         return ResultUtils.success(result);
     }
 
-    Map<String, String> msgMap = new ConcurrentHashMap<>();
 
+    /**
+     * 存储信息的ID以及信息本身
+     */
+    Map<String, String> msgMap = new ConcurrentHashMap<>();
 
     /**
      * 发送消息
-     *
      * @param msg 消息
      * @return 消息ID
      */
@@ -100,7 +130,7 @@ public class ChatController {
 
     /**
      * 对话
-     *
+     * GET方式存在一些问题，消息限制，长度限制，安全性等
      * @param msgId 消息ID
      * @return SseEmitter
      */

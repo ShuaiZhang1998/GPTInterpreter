@@ -4,7 +4,8 @@ import com.zs.project.exception.ErrorCode;
 import com.zs.project.model.response.BaseResponse;
 
 /**
- * Let the result to Response entry
+ * @Author 鱼皮
+ * 返回响应的工具包
  */
 public class ResultUtils {
     /**

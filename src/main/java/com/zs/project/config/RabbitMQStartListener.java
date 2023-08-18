@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
+ * @Author ShuaiZhang
  * 监听器
  */
 @DisableRabbitMQListener

@@ -143,7 +143,7 @@ public class GptServiceImpl implements GptService {
                 //收到消息后转发到浏览器
                 .blockingForEach(x -> {
                     ChatCompletionChoice choice = x.getChoices().get(0);
-                    log.debug("收到消息：" + choice);
+                    log.info("收到消息：" + choice);
                     if (StringUtils.isEmpty(choice.getFinishReason())) {
                         //未结束时才可以发送消息（结束后，先调用doOnComplete然后还会收到一条结束消息，因连接关闭导致发送消息失败:ResponseBodyEmitter has already completed）
                         sseEmitter.send(choice.getMessage());

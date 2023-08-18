@@ -1,5 +1,9 @@
 package com.zs.project.exception;
 
+/**
+ * @Author 鱼皮
+ * 自定义错误码
+ */
 public enum ErrorCode {
     SUCCESS(0,"ok"),
     PARAMS_ERROR(40000, "请求参数错误"),

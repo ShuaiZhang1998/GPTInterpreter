@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @Author GPT4
+ * 从一段markdown中解析出python代码块
+ */
 public class PatternUtils {
     /**
      * 从markdown中解析出python代码

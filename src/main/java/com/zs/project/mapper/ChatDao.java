@@ -5,22 +5,27 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+/**
+ * @Ahthor ShuaiZhang
+ * 操作聊天表的Dao
+ */
+
 @Mapper
 public interface ChatDao {
     /**
-     * 无ID返回插入
+     * 无ID返回，插入新的聊天
      * @param chat
-     * @return
+     * @return 0或者1
      */
     @Insert("INSERT INTO chat (userID, conversationName, nextIndex, conversationHistory, isDeleted) " +
             "VALUES (#{chat.userID}, #{chat.conversationName}, #{chat.nextIndex}, #{chat.conversationHistory}, #{chat.isDeleted})")
     long add(@Param("chat") Chat chat);
 
     /**
-     * 插入新的聊天记录
+     * 更新聊天记录
      * @param conversationID 聊天ID
      * @param newContent 聊天内容
-     * @return
+     * @return 0或者1
      */
     @Update("UPDATE chat " +
                 "SET conversationHistory = JSON_MERGE_PATCH(conversationHistory, #{newContent}) " +

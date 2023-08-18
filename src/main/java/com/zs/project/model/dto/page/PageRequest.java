@@ -5,7 +5,7 @@ import lombok.Data;
 
 
 /**
- * 支持分页时继承该类
+ * 支持分页时，用需要分页的DTO对象继承该类
  * 并使用@EqualsAndHashCode(callSuper = true)
  * 该类不可以单独使用，必须被继承，子类必须实现序列化接口
  */

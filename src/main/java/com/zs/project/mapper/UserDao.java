@@ -3,6 +3,11 @@ package com.zs.project.mapper;
 import com.zs.project.model.entry.User;
 import org.apache.ibatis.annotations.*;
 
+/**
+ * @Ahtuor ShuaiZhang
+ * 操作用户表地dao
+ */
+
 @Mapper
 public interface UserDao {
     /**

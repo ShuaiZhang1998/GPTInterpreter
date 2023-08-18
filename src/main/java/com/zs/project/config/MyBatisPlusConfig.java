@@ -7,14 +7,15 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
+/**
+ * @Ahthor 鱼皮
+ */
 @Configuration
 @MapperScan("com.zs.project.mapper")
 public class MyBatisPlusConfig {
 
     /**
      * 拦截器配置
-     * ref 鱼皮
      * @return
      */
     @Bean

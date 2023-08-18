@@ -5,6 +5,12 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 public class DisableRabbitMQCondition implements Condition {
+    /**
+     * @Author GPT4.0
+     * @param context
+     * @param metadata
+     * @return
+     */
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {

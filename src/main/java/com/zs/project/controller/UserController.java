@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @Author ShuaiZhang
+ * 用户相关的页面
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -22,7 +26,7 @@ public class UserController {
     /**
      * 用户注册
      * @param userRegisterRequest
-     * @return
+     * @return 注册好的用户ID
      */
 
     @PostMapping("/register")
@@ -42,7 +46,7 @@ public class UserController {
      * 用户登陆
      * @param userLoginRequest 登陆参数
      * @param request 登陆后将登陆信息保存到Session
-     * @return
+     * @return 用户脱敏后的信息
      */
 
     @PostMapping("/login")

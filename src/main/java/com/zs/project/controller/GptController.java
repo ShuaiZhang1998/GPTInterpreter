@@ -8,6 +8,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @Author 不详，看到的是被复制粘贴的版本
+ * 测试流式传输
+ */
 @RestController
 @RequestMapping("/gpt")
 public class GptController {

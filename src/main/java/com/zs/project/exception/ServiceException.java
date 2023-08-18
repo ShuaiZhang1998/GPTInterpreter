@@ -1,5 +1,9 @@
 package com.zs.project.exception;
 
+/**
+ * @Author ShuaiZhang
+ * 服务异常
+ */
 public class ServiceException extends RuntimeException{
     private final int code;
 

@@ -5,6 +5,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
+/**
+ * 自定义切面
+ */
 @Aspect
 @Component
 public class MyAspect {

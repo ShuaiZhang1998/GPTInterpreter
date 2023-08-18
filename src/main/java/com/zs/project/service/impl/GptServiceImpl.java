@@ -38,7 +38,7 @@ import java.util.concurrent.CompletableFuture;
 import static com.theokanning.openai.service.OpenAiService.*;
 
 /**
- * 需要用流式处理
+ * 需要用流式处理(已支持)
  */
 @Service
 @Slf4j
@@ -46,7 +46,7 @@ public class GptServiceImpl implements GptService {
 
     String token = "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";
     String proxyHost = "127.0.0.1";
-    int proxyPort = 1111;
+    int proxyPort = 8118;
 
 
 

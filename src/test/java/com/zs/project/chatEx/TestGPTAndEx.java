@@ -19,8 +19,9 @@ public class TestGPTAndEx {
     ExService exService;
     @Test
     void testExPython(){
-        String code = gptService.GptResponse("编写一个最简单的python语言入门代码，实现对5，3，2，1，4的快速排序，不要添加代码以外的任何东西");
-        System.out.println(code);
+        //String code = gptService.GptResponse("编写一个最简单的python语言入门代码，实现对5，3，2，1，4的快速排序，不要添加代码以外的任何东西");
+        //System.out.println(code);
+        String code = "print(1)";
         String s = exService.resultExPython(TestGPTAndEx.extractPythonCode(code));
         System.out.println(s);
     }

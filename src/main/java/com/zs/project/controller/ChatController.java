@@ -15,6 +15,7 @@ import com.zs.project.service.GptService;
 import com.zs.project.util.PatternUtils;
 import com.zs.project.util.ResultUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Author ShuaiZhang
  * 聊天页面
  */
-
+@Slf4j
 @RestController
 @RequestMapping("/chat")
 public class ChatController {
@@ -164,6 +165,7 @@ public class ChatController {
     public ResponseEntity<String> getResult(@PathVariable("msgId") String msgId) {
         String result = resultsStore.get(msgId);
         if (result != null) {
+            log.info("代码是"+PatternUtils.extractPythonCode(result));
             String s = exService.resultExPython(PatternUtils.extractPythonCode(result));
             return ResponseEntity.ok(s);
         } else {

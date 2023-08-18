@@ -1,41 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>ChatGpt测试</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolGPT</title>
     <link rel="stylesheet" href="lib/element-ui/index.css">
 
     <style type="text/css">
         body {
-            background-color: white;
+            background-color: #f7f8fc;
+            font-family: Arial, sans-serif;
+            padding: 2em;
         }
 
-        #outputCard {
-            height: 300px;
-            overflow: auto;
+        h1 {
+            color: #333;
+            padding-bottom: 1em;
         }
 
-        #inputCard {
-            height: 100px;
-            overflow: auto;
+        #chatWindow {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #outputCard, #inputCard {
+            margin-bottom: 1em;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         #outputBody {
-            line-height: 30px;
+            line-height: 1.6;
         }
 
         .cursor-img {
             height: 24px;
             vertical-align: text-bottom;
+            transition: opacity 0.3s;
         }
-    </style>
 
-    <script src="lib/jquery/jquery-3.6.0.min.js"></script>
-    <script src="lib/vue/vue.min.js"></script>
-    <script src="lib/element-ui/index.js"></script>
+        @media (max-width: 768px) {
+            body {
+                padding: 1em;
+            }
+            #chatWindow {
+                max-width: 100%;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation-name: fadeIn;
+            animation-duration: 1s;
+            animation-timing-function: ease-out;
+        }
+
+    </style>
 </head>
+
 <body>
-<h1 align="center">ChatGpt测试</h1>
+
+<h1 align="center">GPTInterpreter</h1>
 
 <div id="chatWindow">
     <el-row id="outputArea">
@@ -50,6 +84,12 @@
             </div>
         </el-card>
     </el-row>
+
+    <!-- 新的组件展示代码器的结果 -->
+    <div v-if="executorResult" id="executorResultComponent">
+        执行器结果: {{ executorResult }}
+    </div>
+
     <el-row id="inputArea">
         <el-col :span="21">
             <el-input id="sendTxt" v-model="input" placeholder="请输入内容" @keyup.native="keyUp"></el-input>
@@ -60,112 +100,125 @@
     </el-row>
 </div>
 
+<script src="lib/jquery/jquery-3.6.0.min.js"></script>
+<script src="lib/vue/vue.min.js"></script>
+<script src="lib/element-ui/index.js"></script>
+
 <script type="text/javascript">
     function fetchResultData(msgId, retries) {
         if (retries <= 0) {
-            console.log("从第二个接口获取数据失败");
+            console.error("Failed to fetch data from the second interface.");
             return;
         }
 
-        setTimeout(function() {
+        setTimeout(() => {
             $.ajax({
                 type: "GET",
                 url: "/chat/getResult/" + msgId,
-                success: function(response) {
-                    // 解析并展示数据
-                    var content = response;
-                    content = content.replaceAll('\n', '<br/>');
-                    var outputTxt = $('#outputTxt');
-                    outputTxt.html(outputTxt.html() + content);
-                    var outputCard = $('#outputCard');
-                    var scrollHeight = outputCard[0].scrollHeight;
-                    outputCard.scrollTop(scrollHeight);
+                success: rawResponse => {
+                    console.log("Received raw response:", rawResponse);
+                    $('#outputTxt').append('<span>获取结果中...</span>');
+
+                    setTimeout(() => {
+                        const response = JSON.parse(rawResponse);
+                        const content = response.result;
+
+                        if (content && content.trim().length > 0) {
+                            app.executorResult = content;
+                            const formattedContent = `<br/><span class="fade-in">"${content}"</span>`;
+                            $('#outputTxt').html(formattedContent);
+
+                            const outputCard = $('#outputCard');
+                            outputCard.scrollTop(outputCard[0].scrollHeight);
+                        }
+                    }, 1000);
                 },
-                error: function() {
-                    // 如果尝试失败，则减少重试次数并再次尝试
+                error: error => {
+                    console.error("Error fetching result:", error);
                     fetchResultData(msgId, retries - 1);
                 }
             });
-        }, 2000); // 2秒的延迟
+        }, 2000);
     }
 
-    var app = new Vue({
+    const app = new Vue({
         el: '#chatWindow',
         data: {
             input: '',
             sendBtnDisabled: false,
             cursorImgVisible: false,
-            blink: true
+            blink: true,
+            executorResult: ''
         },
         methods: {
             keyUp: function(event) {
-                if (event.keyCode == 13) {
+                if (event.keyCode === 13) {
                     this.sendMsg();
                 }
             },
             sendMsg: function() {
-                var that = this;
-                $('#outputTxt').html('');
-                var sendTxt = $('#sendTxt').val();
-                $('#inputTxt').html(sendTxt);
+                const sendMessage = $('#sendTxt').val().trim();
+
+                if (!sendMessage) {
+                    alert("请输入有效的消息内容！");
+                    return;
+                }
+
+                $('#outputTxt').empty();
+                $('#inputTxt').text(sendMessage);
                 $('#sendTxt').val('');
-                that.sendBtnDisabled = true;
-                that.cursorImgVisible = true;
+                this.sendBtnDisabled = true;
+                this.cursorImgVisible = true;
 
                 $.ajax({
-                    type: "post",
+                    type: "POST",
                     url: "/chat/sendMsg",
                     data: {
-                        msg: sendTxt
+                        msg: sendMessage
                     },
                     contentType: 'application/x-www-form-urlencoded',
-                    success: function(data) {
-                        var msgId = data;  // 从后端获取的消息ID
-                        var eventSource = new EventSource('/chat/conversation/' + msgId);
-                        eventSource.addEventListener('open', function(e) {
-                            console.log("EventSource连接成功");
-                        });
+                    success: data => {
+                        const msgId = data;
+                        const eventSource = new EventSource('/chat/conversation/' + msgId);
+                        let blinkTimeout = null;
 
-                        var blinkTimeout = null;
-                        eventSource.addEventListener("message", function(evt) {
-                            var data = evt.data;
-                            var json = JSON.parse(data);
-                            var content = json.content ? json.content : '';
-                            content = content.replaceAll('\n', '<br/>');
-                            var outputTxt = $('#outputTxt');
-                            outputTxt.html(outputTxt.html() + content);
-                            var outputCard = $('#outputCard');
-                            var scrollHeight = outputCard[0].scrollHeight;
-                            outputCard.scrollTop(scrollHeight);
-                            that.blink = false;
-                            window.clearTimeout(blinkTimeout);
-                            blinkTimeout = window.setTimeout(function() {
-                                that.blink = true;
-                            }, 200)
-                        });
-                        eventSource.addEventListener('error', function(e) {
-                            console.log("EventSource连接异常");
+                        eventSource.onopen = () => {
+                            console.log("Successfully connected to EventSource.");
+                        };
+
+                        eventSource.onmessage = evt => {
+                            const content = JSON.parse(evt.data).content?.replaceAll('\n', '<br/>') || '';
+                            $('#outputTxt').append(content);
+
+                            const outputCard = $('#outputCard');
+                            outputCard.scrollTop(outputCard[0].scrollHeight);
+                            this.blink = false;
+                            clearTimeout(blinkTimeout);
+                            blinkTimeout = setTimeout(() => {
+                                this.blink = true;
+                            }, 200);
+                        };
+
+                        eventSource.onerror = e => {
+                            console.error("EventSource encountered an error.");
                             if (e.target.readyState === EventSource.CLOSED) {
                                 console.log('Disconnected');
                             } else if (e.target.readyState === EventSource.CONNECTING) {
-                                console.log('Connecting...');
+                                console.log('Reconnecting...');
                             }
-                        });
+                        };
 
                         eventSource.addEventListener('stop', e => {
-                            console.log('EventSource连接结束');
+                            console.log('EventSource connection terminated.');
                             eventSource.close();
-
                             fetchResultData(msgId, 2);
-
-
-                            that.sendBtnDisabled = false;
-                            that.cursorImgVisible = false;
+                            this.sendBtnDisabled = false;
+                            this.cursorImgVisible = false;
                         }, false);
                     },
-                    error: function() {
-                        that.sendBtnDisabled = false;
-                        that.cursorImgVisible = false;
+                    error: () => {
+                        this.sendBtnDisabled = false;
+                        this.cursorImgVisible = false;
                     }
                 });
             }

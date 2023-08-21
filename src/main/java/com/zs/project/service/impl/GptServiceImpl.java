@@ -38,18 +38,32 @@ import java.util.concurrent.CompletableFuture;
 import static com.theokanning.openai.service.OpenAiService.*;
 
 /**
+ * @author ShuaiZhang
  * 需要用流式处理(已支持)
  */
 @Service
 @Slf4j
 public class GptServiceImpl implements GptService {
 
+    /**
+     * openai的token
+     */
     String token = "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";
+    /**
+     * 代理服务器
+     */
     String proxyHost = "127.0.0.1";
+    /**
+     * 代理端口
+     */
     int proxyPort = 8118;
 
 
-
+    /**
+     * 阻塞式调用gpt3.5
+     * @param query 你的promote
+     * @return
+     */
     @Override
     public String GptResponse(String query) {
         String keys = "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";
@@ -100,6 +114,12 @@ public class GptServiceImpl implements GptService {
         String gptResponse = messageNode.path("content").asText();
         return gptResponse;
     }
+
+    /**
+     * 流式传输
+     * @param prompt 用户问题
+     * @param sseEmitter 实时推送
+     */
 
 
     @Override
@@ -154,6 +174,11 @@ public class GptServiceImpl implements GptService {
         log.info("收到的完整消息：" + receiveMsgBuilder);
     }
 
+    /**
+     * 关闭链接
+     * @param sseEmitter
+     */
+
     @Override
     public void sendStopEvent(SseEmitter sseEmitter) {
         try {
@@ -163,6 +188,13 @@ public class GptServiceImpl implements GptService {
         }
     }
 
+    /**
+     * 创建一个OpenAI服务
+     * @param token API key
+     * @param proxyHost 代理服务器地址
+     * @param proxyPort 代理端口地址
+     * @return
+     */
     @Override
     public OpenAiService buildOpenAiService(String token, String proxyHost, int proxyPort) {
         //构建HTTP代理
@@ -182,7 +214,12 @@ public class GptServiceImpl implements GptService {
         return service;
     }
 
-
+    /**
+     * 支持回调
+     * @param prompt 用户问题
+     * @param sseEmitter SSE对象
+     * @param resultCallback 回调接口
+     */
     @Override
     @Async
     public void streamChatCompletion(String prompt, SseEmitter sseEmitter, ResultCallback resultCallback) {

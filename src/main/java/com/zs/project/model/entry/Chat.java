@@ -3,6 +3,10 @@ package com.zs.project.model.entry;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
+/**
+ * @author ShuaiZhang
+ * 聊天实体类
+ */
 @Data
 @TableName("chat")
 public class Chat {

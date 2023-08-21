@@ -6,6 +6,11 @@ import lombok.Data;
 @Data
 @TableName(value = "user")
 
+/**
+ * @author ShuaiZhang
+ * 用户实体类
+ */
+
 public class User {
     @TableId(value = "userID",type = IdType.ASSIGN_ID)
     private Long userID;

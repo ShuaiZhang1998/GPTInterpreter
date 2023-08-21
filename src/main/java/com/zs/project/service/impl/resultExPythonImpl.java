@@ -8,10 +8,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.json.JSONObject;
 
+/**
+ * @author ShuaiZhang
+ * pthon代码解释器
+ */
 
 
 @Service
 public class resultExPythonImpl implements ExService {
+    /**
+     * 最基础的版本，只有一个python3.9
+     * @param code
+     * @return
+     */
     @Override
     public String resultExPython(String code) {
         RestTemplate restTemplate = new RestTemplate();

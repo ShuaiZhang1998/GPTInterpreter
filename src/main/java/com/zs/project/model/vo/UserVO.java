@@ -5,6 +5,10 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * @author 鱼皮
+ * 脱敏的用户信息
+ */
 @Data
 public class UserVO implements Serializable {
 

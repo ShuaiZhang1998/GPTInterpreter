@@ -6,6 +6,11 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
+/**
+ * @Author ShuaiZhang
+ * 用于聊天的request
+ */
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ChatQueryRequest extends PageRequest implements Serializable {

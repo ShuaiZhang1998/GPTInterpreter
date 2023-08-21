@@ -20,10 +20,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
+/**
+ * @author 用户相关服务
+ * 登录注册
+ */
 
 @Service
 public class userServiceImpl implements UserService {
-
+    /**
+     * 用户操作数据库的dao
+     */
     @Resource
     private final UserDao userDao;
 
@@ -32,6 +38,13 @@ public class userServiceImpl implements UserService {
         this.userDao = userDao;
     }
 
+    /**
+     * 用户注册
+     * @param userName 用户名
+     * @param userPassword 第一次输入的密码
+     * @param repeatPassword 确认密码
+     * @return
+     */
     @Override
     public long userRegister(String userName, String userPassword, String repeatPassword) {
         //万恶的JAVA...
@@ -61,6 +74,13 @@ public class userServiceImpl implements UserService {
         return userDao.getUserByName(userName).getUserID();
     }
 
+    /**
+     * 用户登录
+     * @param userName
+     * @param userPassword
+     * @param request
+     * @return
+     */
     @Override
     public UserVO userLogin(String userName, String userPassword, HttpServletRequest request) {
         if(Objects.equals(userName, "") || Objects.equals(userPassword, ""))
@@ -87,6 +107,11 @@ public class userServiceImpl implements UserService {
 
     }
 
+    /**
+     * 脱敏信息
+     * @param user
+     * @return
+     */
     @Override
     public UserVO getUserVO(User user) {
         if(user==null)

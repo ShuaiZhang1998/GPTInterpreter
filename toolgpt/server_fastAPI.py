@@ -7,7 +7,7 @@ app = FastAPI()
 class ExecuteRequest(BaseModel):
     language: str
     code: str
-
+# 不能get，有的代码会很长
 @app.post('/execute')
 def execute(request: ExecuteRequest):
     language = request.language
@@ -18,7 +18,7 @@ def execute(request: ExecuteRequest):
         image = 'python:3.9'
     else:
         raise HTTPException(status_code=400, detail=f"Unsupported language: {language}")
-
+# 这边以后需要自己搞个docker的镜像，把hugging face的模型都支持下
     # 使用Docker执行代码
     cmd = ['docker', 'run', '-i', image, 'python', '-c', code]
 

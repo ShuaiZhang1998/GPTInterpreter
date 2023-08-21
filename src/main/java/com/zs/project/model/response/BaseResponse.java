@@ -5,6 +5,10 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * @author 鱼皮
+ * 基本的响应
+ */
 @Data
 public class BaseResponse<T> implements Serializable {
 

@@ -23,6 +23,6 @@ server:
   port: 8080
 
 
-
-
-
+python:
+  executor:
+    url: http://10.211.55.2:8000/execute

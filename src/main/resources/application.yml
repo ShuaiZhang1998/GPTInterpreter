@@ -22,7 +22,16 @@ spring:
 server:
   port: 8080
 
-
+# 代码解释器服务地址
 python:
   executor:
     url: http://10.211.55.2:8000/execute
+
+# 代理地址
+proxy:
+  host: 127.0.0.1
+  port: 1111
+
+# openAI 的API tokens
+openai:
+  token: -------------

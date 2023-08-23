@@ -39,9 +39,14 @@ int proxyPort = 8118;
 
 2023/08/23
 
-优化python代码解释器部分
+优化python代码解释器部分[PythonExecutionServiceImpl]
 
 - 构建了一个新的bean用于注入RestTemplate，并将默认content-type设置为json格式
 - 把服务地址抽出来放到了配置文件里
 - 命名修改，注释修改
+
+优化GPT调用部分[GptServiceImpl]
+
+- 为RestTemplate添加了代理支持，使用注解开启(详细看配置文件中的RestTemPlateConfig部分)
+- 建造者模式重构GPT的阻塞式调用
 

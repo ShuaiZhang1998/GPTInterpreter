@@ -59,8 +59,8 @@ public class TestRestFul {
 
     @Test
     void testProxy() {
-        String keys = "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";
-        String ID = "org-dzXy1GOOz3NIh516HiHflgFV";
+        String keys = "-----";
+        String ID = "-----";
 
         // 配置代理
         String proxyHost = "127.0.0.1";  // 替换为你的代理服务器地址
@@ -85,8 +85,8 @@ public class TestRestFul {
 
     @Test
     void testProxy_() {
-        String keys = "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";
-        String ID = "org-dzXy1GOOz3NIh516HiHflgFV";
+        String keys = "-----";
+        String ID = "-----";
 
         // 配置代理
         String proxyHost = "127.0.0.1";  // 替换为你的代理服务器地址

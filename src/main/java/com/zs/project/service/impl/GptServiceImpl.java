@@ -3,7 +3,6 @@ package com.zs.project.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.xiaoymin.knife4j.core.util.StrUtil;
 import com.theokanning.openai.OpenAiApi;
 import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
@@ -15,17 +14,14 @@ import com.zs.project.exception.ServiceException;
 import com.zs.project.model.dto.gpt.OpenAIRequestBuilder;
 import com.zs.project.service.GptService;
 import com.zs.project.service.ResultCallback;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -37,7 +33,7 @@ import java.net.Proxy;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
+
 
 import static com.theokanning.openai.service.OpenAiService.*;
 
@@ -52,15 +48,18 @@ public class GptServiceImpl implements GptService {
     /**
      * openai的token
      */
-    String token = "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";
+    @Value("${openai.token}")
+    String token;
     /**
      * 代理服务器
      */
-    String proxyHost = "127.0.0.1";
+    @Value("${proxy.host}")
+    private String proxyHost;
     /**
      * 代理端口
      */
-    int proxyPort = 8118;
+    @Value("${proxy.port}")
+    private int proxyPort;
 
     @Value("${openai.token}")
     private String OPENAI_KEYS;
@@ -150,6 +149,7 @@ public class GptServiceImpl implements GptService {
                 .build();
         ObjectMapper mapper = defaultObjectMapper();
         Retrofit retrofit = defaultRetrofit(client, mapper);
+
         OpenAiApi api = retrofit.create(OpenAiApi.class);
         OpenAiService service = new OpenAiService(api, client.dispatcher().executorService());
         return service;
@@ -164,7 +164,7 @@ public class GptServiceImpl implements GptService {
     @Override
     @Async
     public void streamChatCompletion(String prompt, SseEmitter sseEmitter, ResultCallback resultCallback) {
-        log.info("发送消息：" + prompt);
+        log.info("发送消息：{}", prompt);
         final List<ChatMessage> messages = new ArrayList<>();
         final ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), prompt);
         messages.add(systemMessage);
@@ -206,7 +206,7 @@ public class GptServiceImpl implements GptService {
                         sseEmitter.send(choice.getMessage());
                     }
                     String content = choice.getMessage().getContent();
-                    content = content == null ? StringUtils.EMPTY : content;
+                    content = StringUtils.defaultString(content);
                     receiveMsgBuilder.append(content);
                 });
         log.info("收到的完整消息：" + receiveMsgBuilder);

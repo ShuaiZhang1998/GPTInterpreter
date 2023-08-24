@@ -20,7 +20,7 @@ public class TestChatGPT {
 
     @Test
     void testProxy() throws JsonProcessingException {
-        String keys = "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";
+        String keys = "------";
 
         // 配置代理
         String proxyHost = "127.0.0.1";

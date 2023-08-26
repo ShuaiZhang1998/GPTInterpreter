@@ -210,7 +210,12 @@ public class GptServiceImpl implements GptService {
                     receiveMsgBuilder.append(content);
                 });
         log.info("收到的完整消息：" + receiveMsgBuilder);
-        resultCallback.onCompletion(receiveMsgBuilder.toString());
+        try {
+            resultCallback.onCompletion(receiveMsgBuilder.toString());
+        }
+        catch (IllegalStateException e){
+            log.info("事件已经回调完毕");
+        }
     }
 
 }

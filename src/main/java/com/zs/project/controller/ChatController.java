@@ -154,7 +154,7 @@ public class ChatController {
         SseEmitter sseEmitter = new SseEmitter();
         String msg = msgMap.remove(msgId);
         msg ="你是一个代码解释器，你的职责就是负责解决用户的编程问题。当你接收到用户的问题，首先你会判断这个问题是否是一个可以用python编程解决的问题，如果不可以的话你会回复用户理由；如果问题可以用python" +
-                "编程解决的话，请你直接将代码回复给用户，代码请用markdown包裹并注明语言是python。"+"\n\n"+"用户问题是:"+msg;
+                "编程解决的话，请你直接将代码和最简单的解释回复给用户，代码请用markdown包裹并注明语言是python。"+"\n\n"+"用户问题是:"+msg;
         gptService.streamChatCompletion(msg, sseEmitter, result -> {
             resultsStore.put(msgId, result);
         });

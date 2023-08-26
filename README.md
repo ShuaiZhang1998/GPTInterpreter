@@ -11,13 +11,13 @@ uvicorn server_fastAPI:app --reload --host 0.0.0.0
 
 2.进入Java主项目
 
-1.修改resultExPythonImpl.java中的apiUrl为你开启后端解释器机器的IP地址
+1.修改application.yml为开启python解释器的服务地址和端口
 
 ```java
 String apiUrl = "http://10.211.55.2:8000/execute";
 ```
 
-2.在GptServiceImpl.java中填写你的OpenAI keys以及代理服务器
+2.在application.yml中填写你的OpenAI keys以及代理服务器
 
 ```java
 String token = "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";

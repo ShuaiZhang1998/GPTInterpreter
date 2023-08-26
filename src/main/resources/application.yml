@@ -1,17 +1,17 @@
 spring:
   # rabbit mq
   rabbitmq:
-    host: 116.204.76.47
+    host: ----
     port: 5672
-    username: zs
-    password: Cx.123456
+    username: ---
+    password: ----
     virtual-host: /
   # mysql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://116.204.76.47:3306/Chat_database
-    username: root
-    password: Cx.123456
+    url: jdbc:mysql://0.0.0.0:3306/Chat_database
+    username: -------
+    password: ---------
   profiles:
     active: dev
   # 支持 swagger3
@@ -34,4 +34,4 @@ proxy:
 
 # openAI 的API tokens
 openai:
-  token: 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
+  token: -----

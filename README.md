@@ -10,7 +10,7 @@
 
 
 
-# ![my_计算](/Users/zs/IdeaProjects/GPTInterpreter/gif/my_计算.gif)
+# ![my_计算](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301754926.gif)
 
 
 
@@ -18,7 +18,7 @@
 
 
 
-# ![豆包计算](/Users/zs/IdeaProjects/GPTInterpreter/gif/豆包计算.gif)
+# ![豆包计算](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301755395.gif)
 
 
 
@@ -26,7 +26,7 @@
 
 
 
-![文言一心计算](/Users/zs/IdeaProjects/GPTInterpreter/gif/文言一心计算.gif)
+![文言一心计算](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301756050.gif)
 
 
 
@@ -34,19 +34,19 @@
 
 
 
-![GPT3.5计算](/Users/zs/IdeaProjects/GPTInterpreter/gif/GPT3.5计算.gif)
+![GPT3.5计算](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301757481.gif)
 
 
 
 ## GPT4
 
-![GPT4计算](/Users/zs/IdeaProjects/GPTInterpreter/gif/GPT4计算.gif)
+![GPT4计算](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301800655.gif)
 
 
 
 ## GPT4包含代码解释器
 
-![GPT4代码解释器](/Users/zs/IdeaProjects/GPTInterpreter/gif/GPT4代码解释器.gif)
+![GPT4代码解释器](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301759375.gif)
 
 # 使用方法
 

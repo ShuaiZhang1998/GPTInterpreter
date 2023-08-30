@@ -10,7 +10,7 @@
 
 
 
-# ![my_计算](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301754926.gif)
+![my_计算](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301754926.gif)
 
 
 
@@ -18,7 +18,7 @@
 
 
 
-# ![豆包计算](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301755395.gif)
+![豆包计算](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301755395.gif)
 
 
 

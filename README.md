@@ -1,5 +1,52 @@
-# SpringBooTTemplate
+# GPTInterpreter
 
+# 展示
+
+结论：没有代码解释器，谁来了都不好使！！大语言模型不适合直接进行计算任务（百度还是挺厉害的）。
+
+## GPTInterpreter
+
+![MY_排序](https://raw.githubusercontent.com/ShuaiZhang1998/figure/main/figure/202308301738579.gif)
+
+
+
+# ![my_计算](/Users/zs/IdeaProjects/GPTInterpreter/gif/my_计算.gif)
+
+
+
+## 豆包（字节）
+
+
+
+# ![豆包计算](/Users/zs/IdeaProjects/GPTInterpreter/gif/豆包计算.gif)
+
+
+
+## 文言一心
+
+
+
+![文言一心计算](/Users/zs/IdeaProjects/GPTInterpreter/gif/文言一心计算.gif)
+
+
+
+## GPT3.5
+
+
+
+![GPT3.5计算](/Users/zs/IdeaProjects/GPTInterpreter/gif/GPT3.5计算.gif)
+
+
+
+## GPT4
+
+![GPT4计算](/Users/zs/IdeaProjects/GPTInterpreter/gif/GPT4计算.gif)
+
+
+
+## GPT4包含代码解释器
+
+![GPT4代码解释器](/Users/zs/IdeaProjects/GPTInterpreter/gif/GPT4代码解释器.gif)
 
 # 使用方法
 
